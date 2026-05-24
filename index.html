@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================
+       MODEL — Change this title to your own name
+       ============================================================ -->
+  <title>Your Name | Freelancer Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- ============================================================
+       VIEW — Global Styles & CSS Variables
+       ============================================================ -->
+  <style>
+    /* === CSS Variables (Theme) === */
+    :root {
+      --bg-primary:    #060d1f;
+      --bg-secondary:  #0b1530;
+      --bg-card:       #0f1d3a;
+      --bg-card-hover: #132245;
+      --border:        #1e3358;
+      --accent:        #4a9eff;
+      --accent-dim:    rgba(74, 158, 255, 0.15);
+      --accent-glow:   rgba(74, 158, 255, 0.25);
+      --teal:          #5eead4;
+      --text-primary:  #e4eaf8;
+      --text-secondary:#8fa3c8;
+      --text-muted:    #4a6080;
+      --font-heading:  'Syne', sans-serif;
+      --font-body:     'IBM Plex Sans', sans-serif;
+      --radius:        12px;
+      --radius-lg:     20px;
+      --transition:    0.3s ease;
+      --shadow:        0 4px 24px rgba(0, 0, 0, 0.4);
+      --shadow-accent: 0 4px 24px rgba(74, 158, 255, 0.15);
+    }
+
+    /* === Reset & Base === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: var(--accent); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--teal); }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* === Utility === */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+    .section { padding: 100px 0; }
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin-bottom: 3.5rem;
+    }
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* === Scrollbar === */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ============================================================
+       VIEW — Navigation
+       ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 1.1rem 0;
+      background: transparent;
+      transition: background var(--transition), border-bottom var(--transition), backdrop-filter var(--transition);
+    }
+    #navbar.scrolled {
+      background: rgba(6, 13, 31, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      transition: color var(--transition);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width var(--transition);
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after,
+    .nav-links a.active::after { width: 100%; }
+    .nav-cta {
+      background: var(--accent-dim);
+      color: var(--accent) !important;
+      border: 1px solid var(--border);
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      transition: background var(--transition), border-color var(--transition) !important;
+    }
+    .nav-cta:hover {
+      background: rgba(74, 158, 255, 0.25) !important;
+      border-color: var(--accent) !important;
+    }
+    .nav-cta::after { display: none !important; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-primary);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: color var(--transition);
+    }
+    .mobile-menu a:hover { color: var(--accent); }
+
+    /* ============================================================
+       VIEW — Hero Section
+       ============================================================ */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-top: 80px;
+      background: var(--bg-primary);
+      overflow: hidden;
+    }
+    /* Subtle grid overlay */
+    #home::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(74,158,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74,158,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    /* Glow blob */
+    #home::after {
+      content: '';
+      position: absolute;
+      top: 10%; left: 55%;
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(74,158,255,0.08) 0%, transparent 70%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease both;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+    .hero-name {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      animation: fadeInUp 0.6s 0.1s ease both;
+    }
+    .hero-name span { color: var(--accent); }
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.6s 0.2s ease both;
+    }
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.6s 0.3s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.6s 0.4s ease both;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-body);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #06101f;
+      box-shadow: var(--shadow-accent);
+    }
+    .btn-primary:hover {
+      background: #6ab3ff;
+      color: #06101f;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(74,158,255,0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      animation: fadeIn 1s 1s ease both;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollAnim 2s infinite;
+    }
+    @keyframes scrollAnim {
+      0%   { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      50%  { opacity: 1; transform: scaleY(1); }
+      100% { opacity: 0; transform: scaleY(1); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ============================================================
+       VIEW — About Section
+       ============================================================ */
+    #about { background: var(--bg-secondary); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-photo-wrap {
+      position: relative;
+    }
+    .about-photo {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .about-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    /* Placeholder when no photo is provided */
+    .about-photo-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      gap: 0.75rem;
+      padding: 2rem;
+      text-align: center;
+    }
+    .about-photo-placeholder .icon {
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+    .about-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(74,158,255,0.08));
+      pointer-events: none;
+    }
+    .about-accent-card {
+      position: absolute;
+      bottom: -1.5rem; right: -1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+    .accent-card-num {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .accent-card-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .about-text p {
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      font-size: 1rem;
+    }
+    .about-highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 2rem;
+    }
+    .highlight-tag {
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.3rem 0.85rem;
+      border-radius: 100px;
+    }
+
+    /* ============================================================
+       VIEW — Services Section
+       ============================================================ */
+    #services { background: var(--bg-primary); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(74,158,255,0.3);
+      box-shadow: var(--shadow-accent);
+    }
+    .service-card:hover::before { opacity: 1; }
+    .service-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+    .service-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    .service-desc {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       VIEW — Skills Section
+       ============================================================ */
+    #skills { background: var(--bg-secondary); }
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .skill-bars { display: flex; flex-direction: column; gap: 1.75rem; }
+    .skill-bar-item {}
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .skill-bar-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .skill-bar-pct {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .skill-bar-track {
+      height: 6px;
+      background: var(--bg-primary);
+      border-radius: 100px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--teal));
+      border-radius: 100px;
+      width: 0;
+      transition: width 1.2s ease;
+    }
+    .skills-tags-wrap {}
+    .skills-category { margin-bottom: 2rem; }
+    .skills-cat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .skill-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.35rem 0.9rem;
+      border-radius: 6px;
+      transition: all var(--transition);
+    }
+    .skill-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* ============================================================
+       VIEW — Projects Section
+       ============================================================ */
+    #projects { background: var(--bg-primary); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(74,158,255,0.3);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), var(--shadow-accent);
+    }
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .project-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition);
+    }
+    .project-card:hover .project-thumb img { transform: scale(1.04); }
+    .project-thumb-placeholder {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .project-thumb-placeholder .icon { font-size: 2.5rem; opacity: 0.35; }
+    .project-type-badge {
+      position: absolute;
+      top: 0.75rem; left: 0.75rem;
+      background: rgba(6,13,31,0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border);
+      color: var(--teal);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+    }
+    .project-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+    }
+    .project-desc {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.25rem;
+    }
+    .project-tag {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.2rem 0.65rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: gap var(--transition);
+    }
+    .project-link:hover { gap: 0.65rem; color: var(--teal); }
+
+    /* ============================================================
+       VIEW — Contact Section
+       ============================================================ */
+    #contact { background: var(--bg-secondary); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .contact-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-item-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+    .contact-item-value {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+    .contact-item-value a { color: var(--text-secondary); }
+    .contact-item-value a:hover { color: var(--accent); }
+    .contact-socials {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .social-btn {
+      width: 42px; height: 42px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      transition: all var(--transition);
+    }
+    .social-btn:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-3px);
+    }
+
+    /* Contact Form */
+    .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.45rem; }
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .form-input,
+    .form-textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      resize: vertical;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: var(--text-muted); }
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(74,158,255,0.12);
+    }
+    .form-textarea { min-height: 130px; }
+    .form-status {
+      font-size: 0.85rem;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      display: none;
+    }
+    .form-status.success {
+      display: block;
+      background: rgba(94,234,212,0.1);
+      border: 1px solid rgba(94,234,212,0.3);
+      color: var(--teal);
+    }
+    .form-status.error {
+      display: block;
+      background: rgba(255,100,100,0.1);
+      border: 1px solid rgba(255,100,100,0.3);
+      color: #ff7070;
+    }
+
+    /* ============================================================
+       VIEW — Footer
+       ============================================================ */
+    footer {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-links a {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ============================================================
+       VIEW — Reveal Animation
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ============================================================
+       VIEW — Responsive
+       ============================================================ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-grid,
+      .skills-layout,
+      .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .about-accent-card { right: 1rem; bottom: -1rem; }
+      .footer-inner { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       VIEW — Mobile Menu
+       ============================================================ -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home"     onclick="closeMenu()">Home</a>
+    <a href="#about"    onclick="closeMenu()">About</a>
+    <a href="#services" onclick="closeMenu()">Services</a>
+    <a href="#skills"   onclick="closeMenu()">Skills</a>
+    <a href="#projects" onclick="closeMenu()">Projects</a>
+    <a href="#contact"  onclick="closeMenu()">Contact</a>
+  </div>
+
+  <!-- ============================================================
+       VIEW — Navigation
+       ============================================================ -->
+  <nav id="navbar">
+    <div class="container nav-inner">
+      <!-- ✏️ MODEL — Change initials/logo text below -->
+      <a class="nav-logo" href="#home">YN<span>.</span></a>
+
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact" class="nav-cta">Contact</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       VIEW — Hero Section (rendered by Controller via Model data)
+       ============================================================ -->
+  <section id="home">
+    <div class="container">
+      <div class="hero-content" id="heroContent">
+        <!-- Populated by JS Controller from Model -->
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — About Section
+       ============================================================ -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-photo-wrap reveal">
+          <div class="about-photo" id="aboutPhoto">
+            <!-- Populated by Controller -->
+          </div>
+          <div class="about-accent-card" id="aboutAccentCard">
+            <!-- Populated by Controller -->
+          </div>
+        </div>
+        <div class="about-text" id="aboutText">
+          <!-- Populated by Controller -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — Services Section
+       ============================================================ -->
+  <section id="services" class="section">
+    <div class="container">
+      <div id="servicesHeader"></div>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Populated by Controller -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — Skills Section
+       ============================================================ -->
+  <section id="skills" class="section">
+    <div class="container">
+      <div id="skillsHeader"></div>
+      <div class="skills-layout">
+        <div class="skill-bars" id="skillBars">
+          <!-- Populated by Controller -->
+        </div>
+        <div id="skillTags">
+          <!-- Populated by Controller -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — Projects Section
+       ============================================================ -->
+  <section id="projects" class="section">
+    <div class="container">
+      <div id="projectsHeader"></div>
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Populated by Controller -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — Contact Section
+       ============================================================ -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div id="contactHeader"></div>
+      <div class="contact-grid">
+        <div id="contactInfo"></div>
+        <div id="contactForm"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VIEW — Footer (rendered by Controller)
+       ============================================================ -->
+  <footer id="footerEl"></footer>
+
+
+  <!-- ==============================================================
+       MODEL — All portfolio data lives here.
+       Edit the values below to personalise your portfolio.
+       ============================================================== -->
+  <script>
+    const PortfolioModel = {
+
+      /* ── Personal Info ──────────────────────────────────────── */
+      personal: {
+        // ✏️ YOUR FULL NAME
+        name: "Casey Justin C. Argote",
+
+        // ✏️ YOUR FREELANCE TITLE
+        title: "Computer Science Student and an aspiring Web Developer",
+
+        // ✏️ SHORT INTRO (shown in the hero section)
+        intro: "I build clean, professional websites and provide reliable virtual assistance to help businesses grow their online presence.",
+
+        // ✏️ LOGO INITIALS (shown in navbar & footer) — usually first+last initial
+        initials: "CA",
+
+        // ✏️ ABOUT ME — write 2–3 short paragraphs about yourself
+        about: [
+          "I am a passionate beginner freelancer with hands-on skills in HTML, CSS, WordPress, Canva, and basic web development. I enjoy crafting simple yet elegant digital solutions that help clients make a strong first impression online.",
+          "When I'm not building websites, I manage emails, schedules, and data tasks for busy entrepreneurs. My goal is to make their day-to-day operations smoother so they can focus on what matters most.",
+          "I believe in continuous learning and take pride in delivering work that is on time, well-organised, and thoughtfully crafted for each client's unique needs."
+        ],
+
+        // ✏️ YEARS OF EXPERIENCE (shown as accent card on photo)
+        yearsExperience: "1+",
+
+        // ✏️ HIGHLIGHT TAGS shown under your about text
+        highlights: ["HTML/CSS", "WordPress", "Canva", "Remote-Ready", "Detail-Oriented"],
+
+        // ✏️ PHOTO URL — replace with a URL to your actual photo, or leave "" to show placeholder
+        photoUrl: "372130105_310563264988465_8945818599840608704_n.jpg",
+
+        // ✏️ RESUME / CV DOWNLOAD LINK — replace with your actual file URL or Google Drive link
+        resumeUrl: "#"
+      },
+
+      /* ── Services ───────────────────────────────────────────── */
+      // ✏️ Edit or add service cards. Each needs: icon, title, description
+      services: [
+        {
+          icon: "🖥️",
+          title: "Web Design & Development",
+          desc: "I design and build responsive, mobile-friendly websites using HTML, CSS, and basic JavaScript — clean code, fast loading, and easy to maintain."
+        },
+        {
+          icon: "🎨",
+          title: "Canva Graphic Design",
+          desc: "From social media posts to presentation decks, I create eye-catching branded graphics using Canva tailored to your business identity."
+        },
+        {
+          icon: "📝",
+          title: "WordPress Content Update",
+          desc: "Already have a WordPress site? I can update pages, blog posts, images, plugins, and keep your site looking fresh and professional."
+        },
+        {
+          icon: "📋",
+          title: "Virtual Assistance",
+          desc: "Email management, calendar scheduling, data entry, research, and general admin tasks — I've got your back so you can focus on growing."
+        },
+        {
+          icon: "🔧",
+          title: "Basic Website Maintenance",
+          desc: "Regular backups, plugin updates, broken-link checks, and minor edits to ensure your website runs smoothly at all times."
+        },
+        {
+          icon: "📊",
+          title: "Data Entry & Research",
+          desc: "Accurate and efficient data encoding into spreadsheets, CRMs, or databases, along with organised research reports using Google Workspace."
+        }
+      ],
+
+      /* ── Skills (bar charts) ────────────────────────────────── */
+      // ✏️ Each skill needs: name and percent (0–100)
+      skillBars: [
+        { name: "HTML & CSS",       pct: 85 },
+        { name: "Canva Design",     pct: 80 },
+        { name: "WordPress",        pct: 70 },
+        { name: "Google Workspace", pct: 75 },
+        { name: "Basic JavaScript", pct: 55 },
+        { name: "Microsoft Office", pct: 80 }
+      ],
+
+      /* ── Skill Tag Groups ───────────────────────────────────── */
+      // ✏️ Edit or add categories and tags as needed
+      skillCategories: [
+        {
+          label: "Development",
+          tags: ["HTML5", "CSS3", "JavaScript", "Responsive Design", "WordPress"]
+        },
+        {
+          label: "Design & Content",
+          tags: ["Canva", "Figma (basic)", "Social Media Graphics", "Content Writing"]
+        },
+        {
+          label: "Tools & Productivity",
+          tags: ["Google Workspace", "Microsoft Office", "Trello", "Email Management", "Zoom"]
+        }
+      ],
+
+      /* ── Projects ───────────────────────────────────────────── */
+      // ✏️ Edit or add projects. Fields: type, title, desc, tags, link, image (URL or "")
+      projects: [
+        {
+          type: "Web Development",
+          title: "Personal Portfolio Website",
+          desc: "A clean, responsive portfolio website built from scratch using HTML and CSS. Designed to showcase skills, services, and projects to potential clients.",
+          tags: ["HTML", "CSS", "Responsive"],
+          link: "#",
+          // ✏️ Replace with a screenshot URL, or leave "" for placeholder
+          image: ""
+        },
+        {
+          type: "Coming Soon",
+          title: "None",
+          desc: "None",
+          tags: ["None"],
+          link: "#",
+          image: ""
+        },
+        {
+          type: "Coming Soon",
+          title: "None",
+          desc: "None",
+          tags: ["None"],
+          link: "#",
+          image: ""
+        }
+      ],
+
+      /* ── Contact Info ───────────────────────────────────────── */
+      contact: {
+        // ✏️ YOUR EMAIL ADDRESS
+        email: "caseyjustinargote@gmail.com",
+
+        // ✏️ YOUR PHONE NUMBER
+        phone: "+63 945 340 0906",
+
+        // ✏️ YOUR LOCATION (City, Country)
+        location: "Cortes, Philippines",
+
+        // ✏️ SOCIAL LINKS — replace # with your actual profile URLs, or remove items you don't use
+        socials: [
+          { label: "LinkedIn",  icon: "in", url: "#" },
+          { label: "GitHub",    icon: "gh", url: "#" },
+          { label: "Facebook",  icon: "fb", url: "#" }
+        ]
+      },
+
+      /* ── Footer ─────────────────────────────────────────────── */
+      footer: {
+        // ✏️ YOUR FULL NAME for copyright
+        name: "Casey Justin C. Argote",
+        year: new Date().getFullYear()
+      }
+    };
+  </script>
+
+
+  <!-- ==============================================================
+       CONTROLLER — Reads Model data and builds the View (DOM).
+       You should NOT need to edit anything below unless you want
+       to change the site's behaviour or structure.
+       ============================================================== -->
+  <script>
+    /* ── Helpers ─────────────────────────────────────────────── */
+    const qs  = (sel, ctx = document) => ctx.querySelector(sel);
+    const $ = id => document.getElementById(id);
+
+    function htmlEscape(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    /* ── Controller: Render Hero ─────────────────────────────── */
+    function renderHero() {
+      const { name, title, intro, resumeUrl } = PortfolioModel.personal;
+      $("heroContent").innerHTML = `
+        <div class="hero-badge">Available for Freelance Work</div>
+        <h1 class="hero-name">Hi, I'm<br><span>${htmlEscape(name)}</span></h1>
+        <p class="hero-title">${htmlEscape(title)}</p>
+        <p class="hero-intro">${htmlEscape(intro)}</p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">Hire Me →</a>
+          <a href="${htmlEscape(resumeUrl)}" class="btn btn-outline" target="_blank">View Resume</a>
+        </div>`;
+    }
+
+    /* ── Controller: Render About ────────────────────────────── */
+    function renderAbout() {
+      const { about, photoUrl, yearsExperience, highlights } = PortfolioModel.personal;
+
+      // Photo or placeholder
+      $("aboutPhoto").innerHTML = photoUrl
+        ? `<img src="${htmlEscape(photoUrl)}" alt="Profile photo" loading="lazy" />`
+        : `<div class="about-photo-placeholder">
+            <span class="icon">👤</span>
+            <span>Add your photo here by setting<br><strong>photoUrl</strong> in the Model</span>
+          </div>`;
+
+      // Accent card
+      $("aboutAccentCard").innerHTML = `
+        <div class="accent-card-num">${htmlEscape(yearsExperience)}</div>
+        <div class="accent-card-label">Year of Experience</div>`;
+
+      // Text
+      const paragraphs = about.map(p => `<p>${htmlEscape(p)}</p>`).join("");
+      const tags = highlights.map(t => `<span class="highlight-tag">${htmlEscape(t)}</span>`).join("");
+      $("aboutText").innerHTML = `
+        <div class="reveal">
+          <p class="section-label">About Me</p>
+          <h2 class="section-title">Who I Am</h2>
+          <div class="divider"></div>
+          ${paragraphs}
+          <div class="about-highlights">${tags}</div>
+        </div>`;
+    }
+
+    /* ── Controller: Render Services ─────────────────────────── */
+    function renderServices() {
+      $("servicesHeader").innerHTML = `
+        <div class="reveal">
+          <p class="section-label">What I Offer</p>
+          <h2 class="section-title">My Services</h2>
+          <div class="divider"></div>
+          <p class="section-subtitle">Here's how I can help you build and grow your online presence.</p>
+        </div>`;
+
+      $("servicesGrid").innerHTML = PortfolioModel.services.map((s, i) => `
+        <div class="service-card reveal reveal-delay-${(i % 3) + 1}">
+          <span class="service-icon">${s.icon}</span>
+          <h3 class="service-title">${htmlEscape(s.title)}</h3>
+          <p class="service-desc">${htmlEscape(s.desc)}</p>
+        </div>`).join("");
+    }
+
+    /* ── Controller: Render Skills ───────────────────────────── */
+    function renderSkills() {
+      $("skillsHeader").innerHTML = `
+        <div class="reveal">
+          <p class="section-label">My Toolbox</p>
+          <h2 class="section-title">Skills & Tools</h2>
+          <div class="divider"></div>
+          <p class="section-subtitle">Technologies and tools I work with to deliver quality results.</p>
+        </div>`;
+
+      $("skillBars").innerHTML = PortfolioModel.skillBars.map(s => `
+        <div class="skill-bar-item reveal">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">${htmlEscape(s.name)}</span>
+            <span class="skill-bar-pct">${s.pct}%</span>
+          </div>
+          <div class="skill-bar-track">
+            <div class="skill-bar-fill" data-pct="${s.pct}"></div>
+          </div>
+        </div>`).join("");
+
+      $("skillTags").innerHTML = PortfolioModel.skillCategories.map(cat => `
+        <div class="skills-category reveal">
+          <p class="skills-cat-label">${htmlEscape(cat.label)}</p>
+          <div class="skills-tags">
+            ${cat.tags.map(t => `<span class="skill-tag">${htmlEscape(t)}</span>`).join("")}
+          </div>
+        </div>`).join("");
+    }
+
+    /* ── Controller: Render Projects ─────────────────────────── */
+    function renderProjects() {
+      $("projectsHeader").innerHTML = `
+        <div class="reveal">
+          <p class="section-label">My Work</p>
+          <h2 class="section-title">Featured Projects</h2>
+          <div class="divider"></div>
+          <p class="section-subtitle">A selection of projects I've worked on. Each one built with care and attention to detail.</p>
+        </div>`;
+
+      $("projectsGrid").innerHTML = PortfolioModel.projects.map((p, i) => {
+        const thumb = p.image
+          ? `<img src="${htmlEscape(p.image)}" alt="${htmlEscape(p.title)}" loading="lazy" />`
+          : `<div class="project-thumb-placeholder"><span class="icon">🖼️</span><span>Add screenshot URL in Model</span></div>`;
+
+        const tags = p.tags.map(t => `<span class="project-tag">${htmlEscape(t)}</span>`).join("");
+
+        return `
+          <div class="project-card reveal reveal-delay-${(i % 3) + 1}">
+            <div class="project-thumb">
+              ${thumb}
+              <span class="project-type-badge">${htmlEscape(p.type)}</span>
+            </div>
+            <div class="project-body">
+              <h3 class="project-title">${htmlEscape(p.title)}</h3>
+              <p class="project-desc">${htmlEscape(p.desc)}</p>
+              <div class="project-tags">${tags}</div>
+              <a href="${htmlEscape(p.link)}" class="project-link" target="_blank">View Project →</a>
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    /* ── Controller: Render Contact ──────────────────────────── */
+    function renderContact() {
+      const { email, phone, location, socials } = PortfolioModel.contact;
+
+      $("contactHeader").innerHTML = `
+        <div class="reveal">
+          <p class="section-label">Get In Touch</p>
+          <h2 class="section-title">Let's Work Together</h2>
+          <div class="divider"></div>
+          <p class="section-subtitle">Have a project in mind? I'd love to hear from you. Send me a message and I'll get back to you as soon as possible.</p>
+        </div>`;
+
+      const socialBtns = socials.map(s => `
+        <a href="${htmlEscape(s.url)}" class="social-btn" title="${htmlEscape(s.label)}" target="_blank">
+          ${htmlEscape(s.icon)}
+        </a>`).join("");
+
+      $("contactInfo").innerHTML = `
+        <div class="contact-info reveal">
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div>
+              <p class="contact-item-label">Email</p>
+              <p class="contact-item-value"><a href="mailto:${htmlEscape(email)}">${htmlEscape(email)}</a></p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <p class="contact-item-label">Phone</p>
+              <p class="contact-item-value"><a href="tel:${htmlEscape(phone)}">${htmlEscape(phone)}</a></p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <p class="contact-item-label">Location</p>
+              <p class="contact-item-value">${htmlEscape(location)}</p>
+            </div>
+          </div>
+          <div>
+            <p class="contact-item-label" style="margin-bottom:.5rem">Social Links</p>
+            <div class="contact-socials">${socialBtns}</div>
+          </div>
+        </div>`;
+
+      $("contactForm").innerHTML = `
+        <div class="reveal reveal-delay-1">
+          <div class="contact-form" id="contactFormEl">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="cfName">Your Name</label>
+                <input class="form-input" id="cfName" type="text" placeholder="Juan Dela Cruz" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cfEmail">Email Address</label>
+                <input class="form-input" id="cfEmail" type="email" placeholder="juan@example.com" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cfSubject">Subject</label>
+              <input class="form-input" id="cfSubject" type="text" placeholder="Project Inquiry" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cfMsg">Message</label>
+              <textarea class="form-textarea" id="cfMsg" placeholder="Tell me about your project…"></textarea>
+            </div>
+            <div id="formStatus" class="form-status"></div>
+            <button class="btn btn-primary" onclick="PortfolioController.handleFormSubmit()" style="align-self:flex-start">
+              Send Message →
+            </button>
+          </div>
+        </div>`;
+    }
+
+    /* ── Controller: Render Footer ───────────────────────────── */
+    function renderFooter() {
+      const { name, year } = PortfolioModel.footer;
+      const { initials } = PortfolioModel.personal;
+      $("footerEl").innerHTML = `
+        <div class="container footer-inner">
+          <span class="footer-logo">${htmlEscape(initials)}<span>.</span></span>
+          <p class="footer-copy">© ${year} ${htmlEscape(name)}. All Rights Reserved.</p>
+          <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>`;
+    }
+
+    /* ── Controller: Navbar scroll & active link ─────────────── */
+    function initNavbar() {
+      const navbar = $("navbar");
+      const sections = document.querySelectorAll("section[id]");
+      const links = document.querySelectorAll(".nav-links a");
+
+      window.addEventListener("scroll", () => {
+        // Sticky style
+        if (window.scrollY > 60) navbar.classList.add("scrolled");
+        else navbar.classList.remove("scrolled");
+
+        // Active link
+        let current = "";
+        sections.forEach(sec => {
+          if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
+        });
+        links.forEach(a => {
+          a.classList.toggle("active", a.getAttribute("href") === `#${current}`);
+        });
+      });
+
+      // Hamburger
+      $("hamburger").addEventListener("click", () => {
+        const open = $("hamburger").classList.toggle("open");
+        $("mobileMenu").classList.toggle("open", open);
+        document.body.style.overflow = open ? "hidden" : "";
+      });
+    }
+
+    /* ── Controller: Skill bar animation on scroll ───────────── */
+    function initSkillBars() {
+      const fills = document.querySelectorAll(".skill-bar-fill");
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.width = entry.target.dataset.pct + "%";
+          }
+        });
+      }, { threshold: 0.3 });
+      fills.forEach(f => observer.observe(f));
+    }
+
+    /* ── Controller: Reveal animations on scroll ─────────────── */
+    function initReveal() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+    }
+
+    /* ── Controller: Handle contact form submit ──────────────── */
+    function handleFormSubmit() {
+      const name    = $("cfName").value.trim();
+      const email   = $("cfEmail").value.trim();
+      const subject = $("cfSubject").value.trim();
+      const msg     = $("cfMsg").value.trim();
+      const status  = $("formStatus");
+
+      if (!name || !email || !msg) {
+        status.className = "form-status error";
+        status.textContent = "Please fill in your name, email, and message.";
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        status.className = "form-status error";
+        status.textContent = "Please enter a valid email address.";
+        return;
+      }
+      /* ✏️ To wire this form to a real backend, replace this block
+         with a fetch() call to your API or a service like Formspree.
+         e.g.: fetch('https://formspree.io/f/YOUR_FORM_ID', { method:'POST', ... })
+      */
+      status.className = "form-status success";
+      status.textContent = `Thanks, ${name}! Your message has been sent. I'll get back to you soon.`;
+      [$("cfName"), $("cfEmail"), $("cfSubject"), $("cfMsg")].forEach(el => el.value = "");
+    }
+
+    /* ── Controller: Close mobile menu ──────────────────────── */
+    function closeMenu() {
+      $("hamburger").classList.remove("open");
+      $("mobileMenu").classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    /* ── Controller: Init — run everything ──────────────────── */
+    const PortfolioController = {
+      handleFormSubmit,
+      init() {
+        renderHero();
+        renderAbout();
+        renderServices();
+        renderSkills();
+        renderProjects();
+        renderContact();
+        renderFooter();
+        initNavbar();
+        // Wait for DOM updates before observing
+        setTimeout(() => {
+          initReveal();
+          initSkillBars();
+        }, 50);
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => PortfolioController.init());
+  </script>
+</body>
+</html>
